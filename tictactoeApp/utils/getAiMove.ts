@@ -1,27 +1,29 @@
+import { Cell, Player } from "@/store/gameStore";
 import { useAuthStore } from "../store/authStore";
-import { useGameStore } from "../store/gameStore";
 import axios, { AxiosRequestConfig } from "axios";
 
-const config: AxiosRequestConfig = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${useAuthStore.getState().token}`,
-  },
-};
+export const getAiMove = async (
+  currentBoard: Array<Cell>,
+  currentPlayer: Player
+) => {
+  const config: AxiosRequestConfig = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${useAuthStore.getState().token}`,
+    },
+  };
 
-export const getAiMove = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/getnextmove",
+      "http://192.168.100.47:5000/api/getnextmove",
       {
-        currentBoard: useGameStore.getState().cells,
-        currentPlayer: useGameStore.getState().currentPlayer,
+        currentBoard,
+        currentPlayer,
       },
       config
     );
 
-    console.log("esponse", response.data);
     if (response.data) {
       return response.data;
     } else {

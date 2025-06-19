@@ -14,7 +14,7 @@ const generateToken = (user) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("Login hit with", email);
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).send({

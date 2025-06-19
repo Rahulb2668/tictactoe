@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Link } from "expo-router";
+import { useAuthStore } from "@/store/authStore";
 
 export default function RegisterScreen() {
+  const { register, isAuthenticated } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleRegister = () => {
-    if (email && password) {
+  const handleRegister = async () => {
+    const res = await register(email, password);
+    if (res.success) {
       Alert.alert("Registration successful!");
-      router.replace("/login");
+      router.replace("/");
     } else {
       Alert.alert("Please fill in all fields");
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.replace("/");
+    }
+  }, [router]);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>

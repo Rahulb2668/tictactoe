@@ -5,8 +5,8 @@ import { useAuthStore } from "./authStore";
 import axios, { AxiosRequestConfig } from "axios";
 import { getAiMove } from "../utils/getAiMove";
 
-type Cell = string | null;
-type Player = "X" | "O" | null;
+export type Cell = string | null;
+export type Player = "X" | "O" | null;
 type GameStatus = "ongoing" | "won" | "draw";
 const config: AxiosRequestConfig = {
   method: "POST",
@@ -72,7 +72,7 @@ export const useGameStore = create(
           loading: true,
         }));
 
-        const aiMovePos = await getAiMove();
+        const aiMovePos = await getAiMove(newCells, nextPlayer);
 
         const aiPlayer: Player = state.userPlaySymbol === "X" ? "O" : "X";
         const newCellsWithAi = [...newCells];
@@ -121,7 +121,7 @@ export const useGameStore = create(
           throw new Error("not user");
         }
         const res = await axios.get(
-          "http://localhost:5000/api/gamestats",
+          "http://192.168.100.47:5000/api/gamestats",
           config
         );
 
@@ -147,7 +147,7 @@ export const useGameStore = create(
           draw: result === "draw" ? 1 : 0,
         };
         const res = await axios.post(
-          "http://localhost:5000/api/gamestats",
+          "http://192.168.100.47:5000/api/gamestats",
           { ...payload },
           config
         );
@@ -172,7 +172,7 @@ export const useGameStore = create(
         });
 
         if (aiPlay) {
-          const aiMoves = await getAiMove();
+          const aiMoves = await getAiMove(state.cells, "X");
           const newCellsWithAi = [...state.cells];
           newCellsWithAi[aiMoves.data] = "X";
 

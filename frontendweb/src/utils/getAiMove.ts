@@ -1,6 +1,6 @@
 import { useAuthStore } from "../store/authStore";
-import { useGameStore } from "../store/gameStore";
 import axios, { AxiosRequestConfig } from "axios";
+import { Cell, Player } from "../store/gameStore";
 
 const config: AxiosRequestConfig = {
   method: "POST",
@@ -10,13 +10,16 @@ const config: AxiosRequestConfig = {
   },
 };
 
-export const getAiMove = async () => {
+export const getAiMove = async (
+  currentBoard: Array<Cell>,
+  currentPlayer: Player
+) => {
   try {
     const response = await axios.post(
       "http://localhost:5000/api/getnextmove",
       {
-        currentBoard: useGameStore.getState().cells,
-        currentPlayer: useGameStore.getState().currentPlayer,
+        currentBoard,
+        currentPlayer,
       },
       config
     );

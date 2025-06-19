@@ -1,28 +1,28 @@
-import { Link, useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuthStore } from "@/store/authStore";
 export default function LoginScreen() {
+  const { login, isAuthenticated } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const router = useRouter();
+
   const handleLogin = async () => {
-    const success = true;
-    if (success) {
-      const userData = {
-        token: "",
-        user: {
-          id: "",
-          email: "",
-        },
-      };
-      await AsyncStorage.setItem("user", JSON.stringify(userData));
+    const res = await login(email, password);
+
+    if (res.success) {
       router.replace("/");
     } else {
       Alert.alert("Invalid Credentials");
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.replace("/");
+    }
+  }, [router]);
 
   return (
     <View style={styles.container}>

@@ -39,7 +39,7 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const response = await axios.post(
-            "http://localhost:5000/api/auth/login", // Change to your backend URL
+            "http://192.168.100.47:5000/api/auth/login", // Change to your backend URL
             {
               email,
               password,
@@ -47,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
             config
           );
 
+          console.log("hi", email, password);
           if (response.data && response.data.data.token) {
             set({
               user: {
@@ -58,6 +59,7 @@ export const useAuthStore = create<AuthState>()(
           }
           return { success: true, message: "Login successful" };
         } catch (error: any) {
+          console.log("error", error);
           return {
             success: false,
             message: error.response?.data?.message || "Login failed",
@@ -74,7 +76,7 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const response = await axios.post(
-            "http://localhost:5000/api/auth/register", // Change to your backend URL
+            "http://192.168.100.47:5000/api/auth/register", // Change to your backend URL
             {
               email,
               password,
