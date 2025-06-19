@@ -8,6 +8,12 @@ const { getNextMoveFromAI } = require("./controllers/getNextMove");
 
 dotenv.config();
 
+if (!process.env.NODE_MONGO_DB_URI) {
+  throw new Error("MONGO DB URI MISSING");
+}
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT Secret Missing add it in env ");
+}
 connectDb();
 
 const app = express();
