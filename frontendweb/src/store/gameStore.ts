@@ -69,9 +69,11 @@ export const useGameStore = create(
           winner: gameWinner,
           currentPlayer: nextPlayer,
           gameStatus,
-          loading: true,
+          loading: gameStatus == "ongoing" ? true : false,
         }));
-
+        if (gameStatus !== "ongoing") {
+          return;
+        }
         const aiMovePos = await getAiMove(newCells, nextPlayer);
 
         const aiPlayer: Player = state.userPlaySymbol === "X" ? "O" : "X";
@@ -120,20 +122,24 @@ export const useGameStore = create(
         if (!user) {
           throw new Error("not user");
         }
-        const res = await axios.get(
-          "http://localhost:5000/api/gamestats",
-          config
-        );
+        try {
+          const res = await axios.get(
+            "http://localhost:5000/api/gamestats",
+            config
+          );
 
-        if (res.data && res.data.data) {
-          set(() => ({
-            userGameStats: {
-              totalGames: res.data.data.totalGames,
-              wins: res.data.data.wins,
-              losses: res.data.data.losses,
-              draws: res.data.data.draws,
-            },
-          }));
+          if (res.data && res.data.data) {
+            set(() => ({
+              userGameStats: {
+                totalGames: res.data.data.totalGames,
+                wins: res.data.data.wins,
+                losses: res.data.data.losses,
+                draws: res.data.data.draws,
+              },
+            }));
+          }
+        } catch (error) {
+          console.log("something went wrong");
         }
       },
       updateUserGameStats: async (result: "win" | "loss" | "draw") => {

@@ -21,7 +21,8 @@ const getNextMoveFromAI = async (req, res) => {
         .slice(6, 9)
         .map((item) => (item === "X" ? -1 : item === "O" ? 1 : 0)),
     ];
-
+    console.log("Cb", currentBoard);
+    console.log("Cp", currentPlayer);
     console.log("array", convrtArr);
     const response = await axios.post(
       "http://localhost:8000/makemove",
